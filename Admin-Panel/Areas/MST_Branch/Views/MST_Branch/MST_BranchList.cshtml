@@ -1,0 +1,90 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+@using System.Data
+@model DataTable
+
+<tr>
+    <a class="btn btn-outline-primary" asp-action="MST_BranchAdd" asp-area="MST_Branch" asp-controller="MST_Branch">Add Branch</a>
+</tr>
+<div class="d-flex align-items-end justify-content-between">
+    <div class="d-flex align-items-end me-auto">
+        <div class="portlet-body row-md-6 searchbox">
+            <form asp-action="MST_BranchSearch" asp-controller="MST_Branch" asp-area="MST_Branch" method="post">
+                <div class="input-group input-group-with-clear">
+                    <input type="search" name="searchKeyword" class="form-control" placeholder="Search" />
+                    <div class="input-group-append ms-1">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                    <span class="clear-button">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <div class="pull-right me-5">
+        <div id="sample_1_filter" class="dataTables_filter">
+            <label>Search Any&nbsp;<input type="text" class="form-control input-sm input-small input-inline" id="sample_1"></label>
+        </div>
+    </div>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Branch Name</th>
+            <th>Branch Code</th>
+            <th>Created</th>
+            <th>Modified</th>
+            <th scope="col" colspan="2" class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="sample_2">
+        @foreach (DataRow dataRow in Model.Rows)
+        {
+            <tr>
+
+                <td>@dataRow["BranchName"]</td>
+                <td>@dataRow["BranchCode"]</td>
+                <td>@Convert.ToDateTime(dataRow["Created"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dataRow["Modified"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method="post" asp-area="MST_Branch" asp-controller="MST_Branch" asp-action="MST_BranchDelete">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["BranchID"])" name="BranchID">
+                        <button type="submit" class="btn btn-outline-danger" value="Delete">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-area="MST_Branch" asp-controller="MST_Branch" asp-action="MST_BranchAdd">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["BranchID"])" name="BranchID">
+                        <button type="submit" class="btn btn-outline-success" value="Edit">Edit</button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+@section Scripts
+    {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+
+    </script>
+    }

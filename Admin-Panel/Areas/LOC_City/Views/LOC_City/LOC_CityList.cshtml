@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "City List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using System.Data
+@using AdminPanel.Areas.LOC_Country.Models;
+@using AdminPanel.Areas.LOC_City.Controllers;
+@using AdminPanel.Areas.LOC_State.Models;
+@model DataTable
+
+
+
+
+
+
+
+
+
+<tr>
+    <a class="btn btn-outline-primary" asp-action="LOC_CityAdd" asp-area="LOC_City" asp-controller="LOC_City">Add City</a>
+</tr>
+
+@* <div class="pull-right me-5">
+        <div id="sample_1_filter" class="dataTables_filter">
+        <label>Search Any&nbsp;<input type="text" class="form-control input-sm input-small input-inline" id="sample_1"></label>
+        </div>
+        </div>*@
+
+
+<div class="Container">
+    <form class="my-3 row g-3 border border-2 rounded p-3" asp-action="LOC_CitySearch" asp-controller="LOC_City" asp-area="LOC_City">
+        <div class="col-12">
+            <h4 class="fw-bold">Filter</h4>
+            <hr />
+        </div>
+        <div class="col-md-3">
+            <label for="CityName" class="form-label">City Name</label>
+            <input type="text" name="CityName" class="form-control" id="CityName" placeholder="e.g. Ram">
+
+
+        </div>
+        <div class="col-md-3">
+            <label for="CountryID" class="form-label">country</label>
+            <select id="CountryID" name="CountryID" class="form-select" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))" onchange="stateChange();">
+                <option value="" selected>select country</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="StateID" class="form-label">State</label>
+            <select id="StateID" name="StateID" class="form-select" asp-items="@(new SelectList(ViewBag.StateList,"StateID","StateName"))" >
+                <option value="" selected>select State</option>
+            </select>
+        </div>
+
+
+
+
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Apply Filter</button>
+            <button type="reset" class="btn btn-danger">Clear Filter</button>
+        </div>
+    </form>
+
+</div>
+<table class="table table-striped table-hover">
+    <tr>
+
+        <th scope="col">City Name</th>
+        <th scope="col">City Code</th>
+        @*<th scope="col">State ID</th>*@
+        <th scope="col">State Name</th>
+        @*<th scope="col">Country ID</th>*@
+
+        <th scope="col">Country Name</th>
+        <th scope="col">Created</th>
+        <th scope="col">Modified</th>
+        <th scope="col" colspan="2" class="text-center">Action</th>
+    </tr>
+    </>
+    <tbody>
+        @foreach (DataRow dataRow in Model.Rows)
+        {
+            <tr>
+
+                <td>@dataRow["CityName"]</td>
+                <td>@dataRow["CityCode"]</td>
+                @*<td>@dataRow["StateID"]</td>*@
+                <td>@dataRow["StateName"]</td>
+                @*<td>@dataRow["CountryID"]</td>*@
+                <td>@dataRow["CountryName"]</td>
+                <td>@Convert.ToDateTime(dataRow["CreationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dataRow["Modified"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method="post" asp-area="LOC_City" asp-controller="LOC_City" asp-action="LOC_CityDelete">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["CityID"])" name="CityID">
+                        <button type="submit" class="btn btn-outline-danger" value="Delete">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-area="LOC_City" asp-controller="LOC_City" asp-action="LOC_CityAdd">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["CityID"])" name="CityID">
+                        <button type="submit" class="btn btn-outline-success" value="Edit">Edit</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section Scripts
+    {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        //$(document).ready(function () {
+        //    $("#sample_1").on("keyup", function () {
+        //        var value = $(this).val().toLowerCase();
+        //        $("#sample_2 tr").filter(function () {
+        //            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        //        });
+        //    });
+        //});
+
+        function fun1() {
+            if (confirm("Are you sure you want to delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+      
+    
+        function stateChange() {
+            console.log("xyz");
+            var CountryID = $("#CountryID").val();
+            console.log(CountryID);
+            if (CountryID !== "") {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByCountry", "LOC_City")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    console.log(value);
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading combobox.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+            }
+        }
+    </script>
+
+    }

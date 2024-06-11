@@ -1,0 +1,174 @@
+﻿@*@model AdminPanel.Areas.MST_Student.Models.MST_StudentModel*@
+@using System.Data;
+
+@model DataTable;
+@{
+    ViewData["Title"] = "View Student Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .student-photo img {
+            width: 150px; /* Adjust the photo size as needed */
+            height: 150px;
+            border-radius: 50%; /* Makes the photo circular */
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .student-details {
+            text-align: left;
+            width: 100%;
+        }
+
+        .student-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .student-detail dt {
+                font-weight: bold;
+                width: 30%;
+                color: #555;
+            }
+
+            .student-detail dd {
+                width: 68%;
+            }
+
+                /* Style the last dd element to remove the border */
+                .student-detail dd:last-child {
+                    border-bottom: none;
+                }
+
+            /* Add hover effect for better interactivity */
+            .student-detail:hover {
+                background-color: #f9f9f9;
+            }
+
+        /* Add a subtle border around the container */
+        .container {
+            border: 1px solid #ddd;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+            .action-buttons form {
+                margin: 0 10px;
+            }
+    </style>
+
+</head>
+<div class="container">
+    @foreach (DataRow dataRow in Model.Rows)
+    {
+        <div class="student-photo">
+            <!-- Display the student's photo -->
+            <img src="@dataRow["PhotoPath"]" alt="Student Photo" class="img-fluid rounded-circle" />
+        </div>
+        <div class="student-details">
+            <h1>Student Profile</h1>
+            <dl class="student-detail">
+                <dt>Student ID:</dt>
+                <dd>@dataRow["StudentID"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Student Name:</dt>
+                <dd>@dataRow["StudentName"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Branch Name:</dt>
+                <dd>@dataRow["BranchName"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>City Name:</dt>
+                <dd>@dataRow["CityName"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Mobile No (Student):</dt>
+                <dd>@dataRow["MobileNoStudent"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Email:</dt>
+                <dd>@dataRow["Email"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Mobile No (Father):</dt>
+                <dd>@dataRow["MobileNoFather"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Address:</dt>
+                <dd>@dataRow["Address"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Birth Date:</dt>
+                <dd>@dataRow["BirthDate"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Age:</dt>
+                <dd>@dataRow["Age"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Gender:</dt>
+                <dd>@dataRow["Gender"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Is Active:</dt>
+                <dd>@dataRow["IsActive"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Created:</dt>
+                <dd>@dataRow["Created"]</dd>
+            </dl>
+            <dl class="student-detail">
+                <dt>Modified:</dt>
+                <dd>@dataRow["Modified"]</dd>
+            </dl>
+        </div>
+        <hr>
+        
+        <div class="d-flex justify-content-between">
+            <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentList">
+                <button type="submit" class="btn btn-outline-primary">Back</button>
+            </form>
+            <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentDelete">
+                <input type="hidden" value="@Convert.ToInt32(dataRow["StudentID"])" name="StudentID">
+                <button type="submit" onclick="return fun1()" class="btn btn-outline-danger" value="Delete">Delete</button>
+            </form>
+            <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentAdd">
+                <input type="hidden" value="@Convert.ToInt32(dataRow["StudentID"])" name="StudentID">
+                <button type="submit" class="btn btn-outline-success">Edit</button>
+            </form>
+        </div>
+    }
+</div>
+
+

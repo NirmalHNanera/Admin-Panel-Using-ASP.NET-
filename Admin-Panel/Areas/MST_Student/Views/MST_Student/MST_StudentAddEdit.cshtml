@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = (Model.StudentID > 0 ? "Edit" : "Add") + " Student ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model AdminPanel.Areas.MST_Student.Models.MST_StudentModel
+
+<div>
+    <form method="post" asp-controller="MST_Student" asp-action="MST_StudentSave" asp-area="MST_Student" enctype="multipart/form-data">
+
+        @Html.HiddenFor(x=>x.StudentID)
+        @Html.HiddenFor(x=>x.Photopath)
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingStudentName" placeholder="Student Name" asp-for="StudentName">
+            <label for="floatingStudentName">Student Name</label>
+            <span asp-validation-for="StudentName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Branch</label>
+            <select class="form-control" asp-for="BranchID" asp-items="@(new SelectList(ViewBag.BranchList, "BranchID", "BranchName"))">
+                <option value="">Select Branch</option>
+            </select>
+            <span asp-validation-for="BranchID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>City</label>
+            <select class="form-control" asp-for="CityID" asp-items="@(new SelectList(ViewBag.CityList, "CityID", "CityName"))">
+                <option value="">Select City</option>
+            </select>
+            <span asp-validation-for="CityID" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingMobileStudent" placeholder="Mobile No (Student)" value="@Model.MobileNoStudent" asp-for="MobileNoStudent">
+            <label for="floatingMobileStudent">Mobile No (Student)</label>
+            <span asp-validation-for="MobileNoStudent" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingEmail" placeholder="Email" value="@Model.Email" asp-for="Email">
+            <label for="floatingEmail">Email</label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingMobileFather" placeholder="Mobile No (Father)" value="@Model.MobileNoFather" asp-for="MobileNoFather">
+            <label for="floatingMobileFather">Mobile No (Father)</label>
+            <span asp-validation-for="MobileNoFather" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <textarea class="form-control" id="floatingAddress" placeholder="Address" asp-for="Address">@Model.Address</textarea>
+            <label for="floatingAddress">Address</label>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="floatingBirthDate" placeholder="Birth Date" value="@Model.BirthDate.ToString("yyyy-MM-dd")" asp-for="BirthDate">
+            <label for="floatingBirthDate">Birth Date</label>
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="floatingAge" placeholder="Age" value="@Model.Age" asp-for="Age">
+            <label for="floatingAge">Age</label>
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Gender</label>
+            <select class="form-control" asp-for="Gender" asp-items="@(new SelectList(ViewBag.GenderList, "Value", "Text"))">
+                <option value="">Select Gender</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Is Active</label>
+            <input type="checkbox" class="form-check-input" asp-for="IsActive" />
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" value="@Model.Password" asp-for="Password">
+            <label for="floatingPassword">Password</label>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <img id="imgpreview" height="50" width="50" src="" style="border-width: 0px; visibility: hidden;" />
+            <lable>Movie Poster</lable>
+            <input type="file" class="btn btn-primary form-control" onchange="showpreview(this);" asp-for="File" />
+            @* <img id="imgpreview" height="50" width="50" src="" style="border-width: 0px; visibility: hidden;" />*@
+        </div>
+
+        <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="Add">
+            <input type="hidden" name="StudentID">
+            <button type="submit" class="btn btn-outline-success">Save</button>
+        </form>
+
+    </form>
+</div>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    @*image preview in add edit page*@
+
+    <script>
+        function showpreview(input) {
+
+            if (input.files && input.files[0]) {
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgpreview').css('visibility', 'visible');
+                    $('#imgpreview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+
+        }
+    </script>
+    }

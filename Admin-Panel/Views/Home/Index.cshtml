@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Include Bootstrap CSS (CDN) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        /* Custom styles for the container */
+        .dashboard-container {
+            background-image: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            padding: 50px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Custom styles for the card */
+        .dashboard-card {
+            max-width: 500px;
+            padding: 40px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        /* Custom styles for the text and data */
+        .welcome {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-data p {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #666;
+            transition: transform 0.3s; /* Add a transform transition */
+        }
+
+            /* Zoom-out effect on hover */
+            .dashboard-data p:hover {
+                transform: scale(1.1); /* Scale up on hover */
+            }
+
+        /* Custom styles for colorful headings and alternate background colors */
+        .heading-color {
+            color: #e83e8c;
+        }
+
+        .total-bg-1 {
+            background-color: #ffc107;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .total-bg-2 {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-card">
+            <h1 class="welcome">Welcome</h1>
+            <p class="text-muted">WELCOME TO ADDRESS BOOK MADE BY NIRMAL</p>
+            <div class="dashboard-data">
+                <p class="total-bg-1 ">Total Countries: <span class="text-danger">@Model.TotalCountries</span></p>
+                <p class="total-bg-2 text-danger">Total States: <span class="text-light">@Model.TotalStates</span></p>
+                <p class="total-bg-1">Total Cities: <span class="text-danger">@Model.TotalCities</span></p>
+                <p class="total-bg-2 text-danger">Total Branches: <span class="text-light">@Model.TotalBranches</span></p>
+                <p class="total-bg-1">Total Students: <span class="text-danger">@Model.TotalStudents</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS (CDN) for optional JavaScript features -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

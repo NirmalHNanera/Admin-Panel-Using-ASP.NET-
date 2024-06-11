@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Add City";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model AdminPanel.Areas.LOC_City.Models.LOC_CityModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">@ViewData["Title"]</h2>
+                    <form method="post" asp-controller="LOC_City" asp-action="LOC_CitySave" asp-area="LOC_City">
+                        <div class="mb-3">
+                            <label for="CityName" class="form-label">City Name</label>
+                            <input type="text" value="@Model.CityName" asp-for="CityName" class="form-control" id="CityName">
+                            <span asp-validation-for="CityName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Citycode" class="form-label">City Code</label>
+                            <input type="text" value="@Model.Citycode" asp-for="Citycode" class="form-control" id="Citycode">
+                            <span asp-validation-for="Citycode" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="CountryID" class="form-label">Country Name</label>
+                            <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList, "CountryID", "CountryName"))" onchange="stateChange();">
+                                <option value="">Select Country</option>
+                            </select>
+                            <span asp-validation-for="CountryID" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="StateID" class="form-label">State Name</label>
+                            <select class="form-control" asp-for="StateID" asp-items="@(new SelectList(ViewBag.StateList, "StateID", "StateName"))">
+                                <option value="">Select State</option>
+                            </select>
+                            <span asp-validation-for="StateID" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <input type="hidden" name="CityID" value="@Model.CityID" />
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <a href="@Url.Action("LOC_CityList", "LOC_City", new { area = "LOC_City" })" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function stateChange() {
+            var CountryID = $("#CountryID").val();
+
+            if (CountryID !== "") {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByCountry", "LOC_City")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading combobox.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+            }
+        }
+    </script>
+}

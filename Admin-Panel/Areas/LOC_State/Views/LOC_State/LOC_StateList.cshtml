@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "State List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data;
+@model DataTable;
+
+<tr>
+    <a class="btn btn-outline-primary" asp-action="LOC_StateAdd" asp-area="LOC_State" asp-controller="LOC_State">Add State</a>
+</tr>
+@*@{
+    String keyword1;
+    if (ViewBag.SearchKeyword == null)
+    {
+        keyword1 = "Ex Rajsthan";
+    }
+    else
+    {
+        keyword1 = @ViewBag.SearchKeyword;
+    }*@
+<div class="Container">
+    <form class="my-3 border border-2 rounded p-3" asp-action="LOC_StateSearch" asp-controller="LOC_State" asp-area="LOC_State" id="filterForm">
+        <div class="col-12">
+            <h4 class="fw-bold text-center">FILTER</h4>
+            <hr />
+        </div>
+        <div class="row align-content-center">
+            <div class="col-md-3">
+                <label for="StateName" class="form-label">State Name</label>
+                <input type="text" name="StateName" class="form-control" id="StateName" placeholder="EXAMPLE" value="@ViewBag.StateName">
+            </div>
+            <div class="col-md-3">
+                <label for="CountryID" class="form-label">Country</label>
+                <select id="CountryID" name="CountryID" class="form-select" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))" value="@ViewBag.CountryID">
+                    <option selected>Select Country</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="applyFilter()">Apply Filter</button>
+                @*<button type="reset" class="btn btn-danger">Clear Filter</button>*@
+                <button type="button" class="btn btn-danger" onclick="clearFilter()">Clear Filter</button>
+
+            </div>
+        </div>
+    </form>
+</div>
+<div id="partialViewContainer">
+    @Html.Partial("_statefilter")
+</div>
+
+@section Scripts
+    {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            function fun1() {
+                if (confirm("Are you sure you want to delete?")) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+        let filterApplied = false;
+
+        function applyFilter() {
+            // Set the filterApplied variable to true when the "Apply Filter" button is clicked
+            filterApplied = true;
+            document.getElementById("filterForm").submit();
+        }
+
+        function clearFilter() {
+            document.getElementById("StateName").value = ""; // Clear State Name input
+            document.getElementById("CountryID").selectedIndex = 0; // Reset the selected Country option to the default
+            document.getElementById("filterForm").submit(); // Submit the form
+        }
+        
+
+
+        $(document).ready(function () {
+            // Attach a submit event handler to the form
+            $("#formCountry").submit(function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: "@Url.Action("LOCState_List", "LOC_State")" + "?&filter=true", // Replace with your controller action URL
+                    type: "POST", // or "GET" if you prefer
+                    data: formData,
+                    success: function (data) {
+                        // Update the div with the response from the controller
+                        $("#partialViewContainer").html(data);
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+    </script>
+}

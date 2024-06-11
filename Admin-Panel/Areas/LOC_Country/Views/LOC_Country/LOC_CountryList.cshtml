@@ -1,0 +1,145 @@
+﻿@*
+        For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    *@
+@{
+
+}
+@using System.Data
+@model DataTable
+<head>
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+    .input-group-with-clear {
+    position: relative;
+    }
+
+    .clear-button {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translatey(-50%);
+    cursor: pointer;
+    }
+
+    .form-control:focus + .clear-button {
+    display: block;
+    }
+    .searchbox{
+    width:100%;
+    margin-bottom:10px;
+    }
+    </style>*@
+    <style>
+        /* CSS for the message */
+        .tempdatadisplay {
+            display: none;
+            background-color: #4CAF50; /* Green background color */
+            color: white; /* White text color */
+            padding: 10px; /* Add some padding */
+            position: fixed; /* Fixed position at the top */
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999; /* Ensure the message is on top of other elements */
+        }
+    </style>
+</head>
+<a class="btn btn-outline-primary" asp-action="LOC_CountryAdd" asp-area="LOC_Country" asp-controller="LOC_Country">Add Country</a>
+<h1 class="text-center text-danger">List Of Country</h1>
+<div class="d-flex align-items-end justify-content-between">
+<div class="portlet-body row-md-6 searchbox">
+    <form asp-action="LOC_CountrySearch" asp-controller="LOC_Country" asp-area="LOC_Country" method="post">
+        <div class="input-group input-group-with-clear">
+            <input type="search" name="searchKeyword" class="form-control" placeholder="Search" />
+            <div class="input-group-append ms-1">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+            <span class="clear-button">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+    </form>
+</div>
+</div>
+
+<h1 class="tempdatadisplay">@TempData["msg"]</h1>
+@* <div class="pull-right me-5">
+        <div id="sample_1_filter" class="dataTables_filter">
+            <label>Search Any&nbsp;<input type="search" class="form-control input-sm input-small input-inline" id="sample_1"></label>
+        </div>
+    </div>*@
+
+
+
+@*div class="portlet-body row-md-6">
+    <form asp-action="LOC_CountrySearch" asp-controller="LOC_Country" asp-area="LOC_Country" method="post">
+        <input type="text" name="searchKeyword" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+</div>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Country Name</th>
+            <th>Country Code</th>
+            <th>Created</th>
+            <th>Modified</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="sample_2">
+        @foreach (DataRow dataRow in Model.Rows)
+        {
+            <tr>
+                <td>@dataRow["CountryName"]</td>
+                <td>@dataRow["CountryCode"]</td>
+                <td>@Convert.ToDateTime(dataRow["Created"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dataRow["Modified"]).ToString("dd-MM-yyyy")</td>
+                <td class="d-flex justify-content-around">
+                    <form method="post" asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="LOC_CountryDelete">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["countryID"])" name="CountryID">
+                        <button type="submit" onclick="return fun1()" class="btn btn-outline-danger" value="Delete">Delete</button>
+                    </form>
+
+                    <form method="post" asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="LOC_CountryAdd">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["countryID"])" name="CountryID">
+                        <button type="submit"  class="btn btn-outline-success" value="Edit">Edit</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts
+    {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+
+
+
+
+
+
+        function fun1() {
+            if (confirm("Are you sure you want to delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+    }

@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Page</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #f2d241;
+            margin: 0;
+            padding: 0;
+        }
+
+        .faq {
+            width: 70%;
+            margin: 0 auto;
+        }
+
+            .faq div {
+                border: 1px solid #000;
+                margin: 5px 0px;
+                background-color: #fff;
+            }
+
+        .question {
+            font-size: 18px;
+            background-color: #ddd;
+            margin: 0px;
+            padding: 15px;
+        }
+
+        .answer {
+            font-size: 12px;
+            margin: 0px;
+            padding: 0px 15px;
+            line-height: 2;
+            max-height: 0px;
+            overflow: hidden;
+            transition: 2s;
+        }
+
+        .opener {
+            font-size: 25px;
+            float: right;
+            line-height: 0.8;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="faq">
+        <div>
+            <p class="question">What does HTML mean? <span onclick='faq(this)' class="opener">+</span></p>
+            <p class="answer">HTML stands for HyperText Markup Language.</p>
+        </div>
+
+        <div>
+            <p class="question">What does CSS mean? <span onclick='faq(this)' class="opener">+</span></p>
+            <p class="answer">CSS stands for Cascading Style Sheets.</p>
+        </div>
+
+        <div>
+            <p class="question">What is JavaScript? <span onclick='faq(this)' class="opener">+</span></p>
+            <p class="answer">JavaScript is a client side programming language.</p>
+        </div>
+        <div>
+            <p class="question">What is ASP .NET? <span onclick='faq(this)' class="opener">+</span></p>
+            <p class="answer">Active Server Pages Network Enabled Technologies 
+                It was developed by Microsoft to allow programmers to build dynamic web sites, applications and services</p>
+        </div>
+        <div>
+            <p class="question">What is MVC IN ASP .NET? <span onclick='faq(this)' class="opener">+</span></p>
+            <p class="answer">Model–view–controller (MVC) is a software design pattern commonly used for developing user interfaces 
+                that divides the related program logic into three interconnected elements.</p>
+        </div>
+    </div>
+
+    <script>
+        function faq(ele) {
+            var x = ele.parentElement.nextElementSibling.style.cssText;
+            if (x == 'max-height: 500px;') {
+                ele.style.cssText = 'transform: rotate(0deg);';
+                ele.parentElement.nextElementSibling.style.cssText = "transition: 0.3s; max-height: 0px;";
+            } else {
+                ele.style.cssText = 'transform: rotate(45deg);';
+                ele.parentElement.nextElementSibling.style.cssText = "max-height: 500px;";
+            }
+        }
+    </script>
+</body>
+</html>

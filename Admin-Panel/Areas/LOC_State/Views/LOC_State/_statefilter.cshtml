@@ -1,0 +1,67 @@
+﻿@using System.Data;
+@model DataTable;
+<head>
+<style>
+    
+    /* CSS for the message */
+    .tempdatadisplay {
+        display: none;
+        background-color: #4CAF50; /* Green background color */
+        color: white; /* White text color */
+        padding: 10px; /* Add some padding */
+        position: fixed; /* Fixed position at the top */
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999; /* Ensure the message is on top of other elements */
+    }
+</style>
+    
+</head>
+<h1 class="tempdatadisplay">@TempData["msg"]</h1>
+<table class="table table-striped">
+    <tr>
+        <th scope="col">State Name</th>
+        <th scope="col">State Code</th>
+        @*<th scope="col">Country ID</th>*@
+        <th scope="col">Country Name</th>
+        <th scope="col">Created</th>
+        <th scope="col">Modified</th>
+        <th scope="col" colspan="2" class="text-center">Action</th>
+    </tr>
+    <tbody id="sample_2">
+        @foreach (DataRow dataRow in Model.Rows)
+        {
+            <tr>
+                <td>@dataRow["StateName"]</td>
+                <td>@dataRow["StateCode"]</td>
+                @*<td scope="col">@dataRow["CountryID"]</td>*@
+                <td scope="col">@dataRow["CountryName"]</td>
+                <td>@Convert.ToDateTime(dataRow["Created"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dataRow["Modified"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method="post" asp-area="LOC_State" asp-controller="LOC_State" asp-action="LOC_StateDelete">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["StateID"])" name="StateID">
+                        <button type="submit" onclick="return fun1()" class="btn btn-outline-danger" value="Delete">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-area="LOC_State" asp-controller="LOC_State" asp-action="LOC_StateAdd">
+                        <input type="hidden" value="@Convert.ToInt32(dataRow["StateID"])" name="StateID">
+                        <button type="submit" class="btn btn-outline-success" value="Edit">Edit</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function fun1() {
+        if (confirm("Are you sure you want to delete?")) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

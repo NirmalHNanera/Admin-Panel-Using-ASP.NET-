@@ -1,0 +1,5 @@
+﻿function fun() {
+    alert(
+        "Hello"
+    )
+}

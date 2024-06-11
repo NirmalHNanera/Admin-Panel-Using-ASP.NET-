@@ -1,0 +1,48 @@
+﻿@{
+
+    ViewData["Title"] = (Model.CountryID > 0 ? "Edit" : "Add") + " Country ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model AdminPanel.Areas.LOC_Country.Models.LOC_CountryModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center">@ViewData["Title"]</h1>
+                    <form method="post" asp-controller="LOC_Country" asp-action="LOC_CountrySave" asp-area="LOC_Country">
+                        <div class="mb-3">
+                            <label for="floatingInput" class="form-label">Country Name</label>
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Country Name" value="@Model.CountryName" asp-for="CountryName">
+                            <span asp-validation-for="CountryName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="floatingPassword" class="form-label">Country Code</label>
+                            <input type="text" class="form-control" id="floatingPassword" placeholder="Country Code" value="@Model.CountryCode" asp-for="CountryCode">
+                            <span asp-validation-for="CountryCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 text-center">
+                            <input type="hidden" name="CountryID" value="@Model.CountryID" />
+                            <button type="submit" value="Save" class="btn btn-primary">Save</button>
+                           
+
+                                <a href="@Url.Action("LOC_CountryList", "LOC_Country", new { area = "LOC_Country" })" class="btn btn-danger">Cancel</a>
+                          
+                        </div>
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

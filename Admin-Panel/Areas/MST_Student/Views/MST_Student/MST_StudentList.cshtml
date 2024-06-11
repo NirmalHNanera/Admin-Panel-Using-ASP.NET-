@@ -1,0 +1,285 @@
+﻿@{
+    ViewData["Title"] = "Student List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data
+@using AdminPanel.Areas.LOC_City.Models;
+@using AdminPanel.Areas.MST_Branch.Models;
+@model DataTable
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+<div class="d-flex justify-content-between">
+    <a class="btn btn-outline-primary" asp-action="MST_StudentAdd" asp-area="MST_Student" asp-controller="MST_Student"><i class="fas fa-user-plus"></i>Add Student</a>
+    @*<button id="toggleFilter" class="btn btn-primary ml-auto">Show Filters</button>*@
+    <button id="toggleFilter" class="btn btn-primary ml-auto"><i class="fas fa-filter"></i></button>
+</div>
+<h1 class="text-center text-danger">List Of Students</h1>
+<div class="container">
+
+
+    <div id="filterContainer" style="display: none;">
+        <form class=" my-3 row g-3 border border-2 rounded p-3" asp-action="Search" asp-controller="MST_Student" asp-area="MST_Student">
+            <div class="col-12">
+                <h4 class="fw-bold">Filter</h4>
+                <hr />
+            </div>
+            <div class="col-md-3">
+                <label for="StudentName" class="form-label">Student Name</label>
+                <input type="text" name="StudentName" class="form-control" id="StudentName" placeholder="e.g. Ram">
+
+            </div>
+            <div class="col-md-3">
+                <label for="Email" class="form-label">Email</label>
+                <input type="text" name="Email" class="form-control" id="Email" placeholder="name@example.com">
+            </div>
+            <div class="col-md-3">
+                <label for="MobileNoStudent" class="form-label">MobileNoStudent	</label>
+                <input type="text" name="MobileNoStudent" class="form-control" id="MobileNoStudent" placeholder="e.g. 1234565789">
+
+            </div>
+            <div class="col-md-3">
+                <label for="Age" class="form-label">Age</label>
+                <input type="text" name="Age" class="form-control" id="Age" placeholder="e.g. 15">
+            </div>
+            <div class="col-md-3">
+                <label for="CountryID" class="form-label">country</label>
+                <select id="CountryID" name="CountryID" class="form-select" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))" onchange="stateChange();">
+                    <option value="" selected>select country</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="StateID" class="form-label">State</label>
+                <select id="StateID" name="StateID" class="form-select" asp-items="@(new SelectList(ViewBag.StateList,"StateID","StateName"))" onchange="cityChange();">
+                    <option value="" selected>select State</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="CityID" class="form-label">City</label>
+                <select id="CityID" name="CityID" class="form-select" asp-items="@(new SelectList(ViewBag.CityList,"CityID","CityName"))">
+                    <option selected>Select City</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="BranchID" class="form-label">Branch</label>
+                <select id="BranchID" name="BranchID" class="form-select" asp-items="@(new SelectList(ViewBag.BranchList,"BranchID","BranchName"))">
+                    <option selected>Select Branch</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="BirthDate" class="form-label">Birth	Date</label>
+                <input type="date" name="BirthDate" class="form-control" id="BirthDate">
+            </div>
+            <div class="col-md-3">
+                <label for="JoinStartDate" class="form-label">Joining Start Date</label>
+                <input type="date" name="JoinStartDate" class="form-control" id="JoinStartDate">
+            </div>
+            <div class="col-md-1 align-self-end">
+
+                <h6 class="text-center">TO</h6>
+            </div>
+            <div class="col-md-3">
+                <label for="JoinEndDate" class="form-label">Joining End Date</label>
+                <input type="date" name="JoinEndDate" class="form-control" id="JoinEndDate">
+            </div>
+
+            <div class="col-md-3">
+                <label for="Gender" class="form-label">Gender</label>
+                <select id="Gender" name="Gender" class="form-select">
+                    <option value="" selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="IsActive" class="form-label">Active</label>
+                <select id="IsActive" name="IsActive" class="form-select">
+                    <option selected>Select Active</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-success">Apply Filter</button>
+                <button type="reset" class="btn btn-danger">Clear Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark text-center">
+
+            <tr>
+
+                <th scope="col">Student Name</th>
+                <th scope="col">Branch Name</th>
+                <th scope="col">City Name</th>
+                <th scope="col">Is Active</th>
+                @*<th scope="col">Mobile No</th>
+                <th scope="col">Email</th>
+
+                <th scope="col">Address</th>
+                <th scope="col">Birth Date</th>
+                <th scope="col">Age</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Is Active</th>
+                <th scope="col">Created</th>
+                <th scope="col">Modified</th>*@
+                <th scope="col" colspan="3" class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow dataRow in Model.Rows)
+            {
+                <tr>
+
+                    <td>@dataRow["StudentName"]</td>
+                    <td>@dataRow["BranchName"]</td>
+                    <td>@dataRow["CityName"]</td>
+                    <td>@dataRow["isactive"]</td>
+                    @*<td>Student:@dataRow["MobileNoStudent"]&nbsp Father:@dataRow["MobileNoFather"]</td>
+                <td>@dataRow["Email"]</td>
+
+                <td>@dataRow["Address"]</td>
+                <td>@dataRow["BirthDate"]</td>
+                <td>@dataRow["Age"]</td>
+                <td>@dataRow["Gender"]</td>
+                <td>@datarow["isactive"]</td>
+                <td>@Convert.ToDateTime(dataRow["Created"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dataRow["Modified"]).ToString("dd-MM-yyyy")</td>*@
+                    <div class="d-flex justify-content-around">
+                    <td>
+                        <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentViewProfile">
+                            <input type="hidden" value="@Convert.ToInt32(dataRow["StudentID"])" name="StudentID">
+                            <button type="submit" class="btn btn-outline-primary">View Profile</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentDelete">
+                            <input type="hidden" value="@Convert.ToInt32(dataRow["StudentID"])" name="StudentID">
+                            <button type="submit" onclick="return fun1()" class="btn btn-outline-danger" value="Delete">Delete</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentAdd">
+                            <input type="hidden" value="@Convert.ToInt32(dataRow["StudentID"])" name="StudentID">
+                            <button type="submit" class="btn btn-outline-success">Edit</button>
+                        </form>
+                    </td>
+    </div>
+                        </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+
+
+@section Scripts
+    {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        //$(document).ready(function () {
+        //    $("#sample_1").on("keyup", function () {
+        //        var value = $(this).val().toLowerCase();
+        //        $("#sample_2 tr").filter(function () {
+        //            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        //        });
+        //    });
+        //});
+        $(document).ready(function () {
+            // Get references to the button and filter container
+            var $toggleButton = $("#toggleFilter");
+            var $filterContainer = $("#filterContainer");
+
+            // Add a click event handler to the button
+            $toggleButton.on("click", function () {
+                // Toggle the visibility of the filter container
+                $filterContainer.slideToggle();
+            });
+        });
+        function fun1() {
+            if (confirm("Are you sure you want to delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+
+        function stateChange() {
+            console.log("xyz");
+            var CountryID = $("#CountryID").val();
+            console.log(CountryID);
+            if (CountryID !== "") {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByCountry", "MST_Student")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    console.log(value);
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading combobox.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+            }
+        }
+        function cityChange() {
+            var StateID = $("#StateID").val();
+
+            if (StateID !== "" || State != null) {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByState", "MST_Student")" + "?&StateID=" + StateID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+
+                            $.each(Result,
+                                function (key, value) {
+                                    console.log(value)
+                                    $("#CityID").append($("<option></option>").val(value.cityID).html(value.cityName));
+                                });
+                        },
+                        error: function (r) {
+                            $("#CityID").attr("disabled", true);
+                            alert("Error while loading combobox.");
+                            $("#CityID").append($("<option></option>").val("").html("Select City"));
+
+                        }
+                    });
+            }
+            else {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+            }
+        }
+    </script>
+
+        }
+
